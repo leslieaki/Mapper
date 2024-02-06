@@ -16,7 +16,7 @@ interface Person {
     interface Mapper<T> {
         fun map(id: Int, name: String, surname: String): T
 
-        class CompareId(private val id:Int) : Mapper<Boolean> {
+        class CompareId(private val id: Int) : Mapper<Boolean> {
             override fun map(id: Int, name: String, surname: String): Boolean {
                 return this.id == id
             }
@@ -27,13 +27,23 @@ interface Person {
                 return person.personMap(CompareId(id))
             }
         }
+
+        class FullName : Mapper<String> {
+            override fun map(id: Int, name: String, surname: String): String {
+                return "$name $surname"
+            }
+        }
     }
 }
 
 
 fun main() {
-    val person = Person.Base(1, "1", "123")
-    val personTwo = Person.Base(1, "1", "12")
-    val result = personTwo.personMap(Person.Mapper.Same(person))
+    val personFirst = Person.Base(1, "Jeffrey", "King")
+    val personSecond = Person.Base(1, "Manley", "Mary")
+    val result = personSecond.personMap(Person.Mapper.Same(personFirst))
     println(result)
+    val fullNameFirst = personFirst.personMap(Person.Mapper.FullName())
+    val fullNameSecond = personSecond.personMap(Person.Mapper.FullName())
+    println(fullNameFirst)
+    println(fullNameSecond)
 }
